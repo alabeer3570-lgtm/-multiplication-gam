@@ -1035,7 +1035,7 @@
       function bindEvents() {
         elements.startBtn.addEventListener("click", () => showPage("setupPage"));
         elements.saveSettingsBtn.addEventListener("click", saveSettingsFromForm);
-        elements.startLessonBtn.addEventListener("click", startLesson);
+        elements.startLessonBtn.addEventListener("click", () => startLesson());
         elements.soundToggleHome.addEventListener("click", () => toggleSound());
         elements.soundToggleSetup.addEventListener("click", () => toggleSound());
         elements.fullscreenBtn.addEventListener("click", toggleFullscreen);
@@ -1124,7 +1124,7 @@
         renderHome();
       }
 
-      function startLesson() {
+      function startLesson(stageIndex = 0) {
         saveSettingsFromForm();
         const names = state.settings.names.length ? state.settings.names : defaultNames;
         const tables = state.settings.tables.length ? state.settings.tables : [4];
@@ -1132,7 +1132,7 @@
 
         state.summary = createSummary(names);
         state.stars = 0;
-        state.currentStageIndex = 0;
+        state.currentStageIndex = Number.isInteger(stageIndex) && stageIndex >= 0 && stageIndex < STAGES.length ? stageIndex : 0;
         state.currentChallenge = null;
         state.currentStudent = "";
         state.challengeSolved = false;
@@ -1190,14 +1190,14 @@
         const stageCards = STAGES.map((stage, index) => {
           const completed = index < state.currentStageIndex;
           const active = index === state.currentStageIndex;
-          const statusClass = completed ? "done" : active ? "active" : "locked";
+          const statusClass = active ? "active" : "";
           return `
-            <div class="stage-card ${statusClass}">
+            <button type="button" class="stage-card ${statusClass}" style="font:inherit;color:inherit;cursor:pointer" onclick="startLesson(${index})">
               <div class="stage-badge">${index + 1}</div>
               <h3>${stage}</h3>
-              <div class="small-note">${completed ? "مكتملة" : active ? "الحالية" : "مغلقة"}</div>
-              <div class="star-small">${completed ? "★" : "☆"}</div>
-            </div>
+              <div class="small-note">اضغطي لبدء المرحلة</div>
+              <div class="star-small">☆</div>
+            </button>
           `;
         }).join("");
 
@@ -2043,6 +2043,10 @@
             </tbody>
           </table>
         `;
+      }
+
+      function normalizeNames(value) {
+        return [...new Set(String(value || "").split(/[\n\r،,]+/).map(name => name.trim()).filter(Boolean))];
       }
 
       function normalizeText(value) {
