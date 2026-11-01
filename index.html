@@ -2045,10 +2045,6 @@
         `;
       }
 
-      function normalizeNames(value) {
-        return [...new Set(String(value || "").split(/[\n\r،,]+/).map(name => name.trim()).filter(Boolean))];
-      }
-
       function normalizeText(value) {
         return String(value || "")
           .replace(/[\u0660-\u0669]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
