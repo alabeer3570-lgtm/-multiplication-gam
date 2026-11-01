@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>رحلة الضرب</title>
+    <style>
+      :root {
+        --bg-1: #f7e7c6;
+        --bg-2: #f9d9b6;
+        --purple: #6c4ba6;
+        --purple-dark: #4a2d74;
+        --pink: #f9d7d7;
+        --mint: #dff4d5;
+        --yellow: #f9d45d;
+        --gold: #f6c64b;
+        --sky: #dfeefb;
+        --lavender: #e8d8ff;
+        --peach: #ffd8bf;
+        --rose: #f8d5d1;
+        --cream: #fffaf1;
+        --green: #79b98d;
+        --red: #d76b6b;
+        --text: #3d2c55;
+        --shadow: rgba(66, 42, 93, 0.18);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at top, rgba(255,255,255,0.42), transparent 22%),
+          linear-gradient(135deg, var(--bg-1), var(--bg-2));
+        color: var(--text);
+        font-family: "Tahoma", "Segoe UI", sans-serif;
+      }
+
+      body {
+        direction: rtl;
+        display: flex;
+        justify-content: center;
+        padding: 14px;
+      }
+
+      .app {
+        width: min(1100px, 100%);
+        position: relative;
+      }
+
+      .page {
+        display: none;
+        background: rgba(255,255,255,0.18);
+        border-radius: 28px;
+        box-shadow: 0 18px 50px rgba(82, 62, 120, 0.12);
+        border: 2px solid rgba(108, 75, 166, 0.12);
+        padding: 18px 18px 22px;
+        min-height: 760px;
+      }
+
+      .page.active { display: block; }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .topbar .left-tools,
+      .topbar .right-tools {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .action-btn, button {
+        border: none;
+        border-radius: 18px;
+        background: linear-gradient(180deg, #fff9ee, #f7ebd2);
+        color: var(--text);
+        padding: 10px 16px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 8px 15px rgba(92, 78, 112, 0.12);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button:hover, .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 18px rgba(92, 78, 112, 0.16);
+      }
+
+      button:active, .action-btn:active {
+        transform: translateY(0);
+      }
+
+      .primary {
+        background: linear-gradient(180deg, #9d7ae2, #714fc7);
+        color: white;
+      }
+
+      .secondary {
+        background: linear-gradient(180deg, #f0d9a7, #e5c26f);
+      }
+
+      .success {
+        background: linear-gradient(180deg, #aee8bc, #7dcf93);
+      }
+
+      .danger {
+        background: linear-gradient(180deg, #f7c2c2, #eb8c8c);
+      }
+
+      .hero {
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 20px 10px 18px;
+      }
+
+      .title-wrap {
+        background: rgba(255,255,255,0.18);
+        border-radius: 26px;
+        padding: 18px 22px 14px;
+        border: 2px solid rgba(108,75,166,0.14);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.2rem, 4vw, 4.5rem);
+        color: var(--purple-dark);
+        letter-spacing: 0.03em;
+      }
+
+      .motto {
+        margin-top: 10px;
+        font-size: clamp(1.2rem, 2vw, 2rem);
+        color: #5c3c7a;
+        font-weight: 700;
+      }
+
+      .start-btn {
+        margin-top: 16px;
+        font-size: 1.2rem;
+        padding: 16px 28px;
+        border-radius: 20px;
+      }
+
+      .stats-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin: 10px 0 18px;
+      }
+
+      .stat-pill {
+        min-width: 150px;
+        background: rgba(255,255,255,0.26);
+        border: 2px solid rgba(108,75,166,0.1);
+        border-radius: 18px;
+        padding: 12px 16px;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .stage-map {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(130px, 1fr));
+        gap: 16px;
+        margin: 18px auto 0;
+        max-width: 860px;
+      }
+
+      .stage-card {
+        position: relative;
+        background: linear-gradient(180deg, rgba(255,255,255,0.38), rgba(255,255,255,0.18));
+        border: 2px solid rgba(108,75,166,0.15);
+        border-radius: 24px;
+        padding: 18px 14px 16px;
+        text-align: center;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .stage-card.locked {
+        opacity: 0.72;
+      }
+
+      .stage-card.active {
+        border-color: rgba(108,75,166,0.3);
+        box-shadow: 0 16px 20px rgba(92, 78, 112, 0.15);
+      }
+
+      .stage-badge {
+        display: inline-flex;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #f6d868, #e7af3f);
+        color: #4b2c4d;
+        font-weight: 900;
+        box-shadow: inset 0 3px 10px rgba(255,255,255,0.35);
+      }
+
+      .stage-card h3 {
+        margin: 0;
+        color: var(--purple-dark);
+        font-size: 1.15rem;
+      }
+
+      .stage-card p {
+        margin: 0;
+        line-height: 1.5;
+        color: #503a62;
+      }
+
+      .star-small {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #f9d95a, #ddad39);
+        color: #4d2c42;
+        font-size: 1.05rem;
+      }
+
+      .setup-wrap {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 18px;
+      }
+
+      .panel {
+        background: rgba(255,255,255,0.15);
+        border: 2px solid rgba(108,75,166,0.14);
+        border-radius: 24px;
+        padding: 18px 16px;
+      }
+
+      .panel h2 {
+        margin-top: 0;
+        color: var(--purple-dark);
+        font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 200px;
+        border-radius: 20px;
+        border: 2px solid rgba(108,75,166,0.18);
+        padding: 12px 14px;
+        font-size: 1rem;
+        background: rgba(255,255,255,0.35);
+        color: var(--text);
+        resize: vertical;
+      }
+
+      .option-group {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .grid-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .check-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(108,75,166,0.12);
+        border-radius: 14px;
+        padding: 8px 10px;
+        font-weight: 700;
+      }
+
+      select {
+        width: 100%;
+        border-radius: 16px;
+        border: 2px solid rgba(108,75,166,0.18);
+        padding: 11px 12px;
+        font-size: 1rem;
+        background: rgba(255,255,255,0.35);
+        color: var(--text);
+      }
+
+      .actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 6px 6px 18px;
+      }
+
+      .student-badge, .timer-badge, .star-badge {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(108,75,166,0.12);
+        border-radius: 18px;
+        padding: 10px 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+      }
+
+      .timer-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .stage-panel {
+        background: rgba(255,255,255,0.15);
+        border-radius: 24px;
+        border: 2px solid rgba(108,75,166,0.12);
+        padding: 18px 16px;
+        margin-top: 6px;
+      }
+
+      .stage-panel h2 {
+        margin: 0 0 10px;
+        color: var(--purple-dark);
+      }
+
+      .stage-panel p {
+        margin: 0;
+      }
+
+      .challenge-shell {
+        margin-top: 18px;
+        background: rgba(255,255,255,0.16);
+        border: 2px solid rgba(108,75,166,0.1);
+        border-radius: 26px;
+        padding: 16px;
+      }
+
+      .challenge-card {
+        background: rgba(255,255,255,0.2);
+        border-radius: 26px;
+        border: 2px solid rgba(106,76,145,0.12);
+        padding: 18px;
+        min-height: 240px;
+      }
+
+      .question-title {
+        margin: 0 0 10px;
+        color: var(--purple-dark);
+        font-size: clamp(1.4rem, 2vw, 2rem);
+      }
+
+      .prompt-box {
+        margin: 14px 0;
+        font-size: clamp(1.08rem, 1.6vw, 1.45rem);
+        line-height: 1.8;
+        background: rgba(255,255,255,0.16);
+        border-radius: 18px;
+        padding: 14px;
+      }
+
+      .answer-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 14px;
+      }
+
+      input[type="text"], input[type="number"] {
+        min-width: 120px;
+        flex: 1 1 180px;
+        border-radius: 14px;
+        border: 2px solid rgba(108,75,166,0.18);
+        background: rgba(255,255,255,0.42);
+        color: var(--text);
+        padding: 12px 14px;
+        font-size: 1.05rem;
+      }
+
+      .helper-box {
+        background: linear-gradient(180deg, #fef7e8, #f5e8c4);
+        border: 2px solid rgba(168,120,7,0.18);
+        border-radius: 18px;
+        padding: 12px 14px;
+        margin-top: 14px;
+        font-weight: 700;
+      }
+
+      .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .choice-btn {
+        border-radius: 18px;
+        border: 2px solid rgba(108,75,166,0.14);
+        background: linear-gradient(180deg, #fff6e0, #f9ebc8);
+        padding: 14px 12px;
+        font-weight: 800;
+        color: var(--text);
+        min-height: 80px;
+      }
+
+      .choice-btn.correct {
+        background: linear-gradient(180deg, #cdeecf, #9ed09c);
+        border-color: rgba(32,116,65,0.3);
+      }
+
+      .choice-btn.wrong {
+        background: linear-gradient(180deg, #f6d0d0, #eca9a9);
+        border-color: rgba(150,54,54,0.24);
+      }
+
+      .fish-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+      }
+
+      .fish-card {
+        position: relative;
+        min-height: 90px;
+        background: linear-gradient(180deg, #f4e7ff, #dbeaff);
+        border-radius: 42% 58% 55% 45% / 55% 45% 55% 45%;
+        border: 2px solid rgba(108,75,166,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: var(--purple-dark);
+      }
+
+      .fish-card::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: rgba(255,255,255,0.7);
+        border-radius: 50%;
+        right: 18px;
+        top: 18px;
+      }
+
+      .fish-card::after {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.45);
+        transform: translateY(-50%);
+      }
+
+      .wheel-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px 0 16px;
+      }
+
+      .wheel {
+        position: relative;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: conic-gradient(
+          #f7d35f 0deg 60deg,
+          #ef8ba1 60deg 120deg,
+          #b9d6ff 120deg 180deg,
+          #8fd8b4 180deg 240deg,
+          #d7c3ff 240deg 300deg,
+          #f7c5b0 300deg 360deg
+        );
+        border: 10px solid #f8e8bf;
+        transition: transform 4s cubic-bezier(.14,.82,.25,1);
+        box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.35), 0 18px 26px rgba(98, 79, 140, 0.2);
+      }
+
+      .wheel::before {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border-radius: 50%;
+        border: 3px dashed rgba(255,255,255,0.48);
+      }
+
+      .wheel::after {
+        content: "";
+        position: absolute;
+        width: 0; height: 0;
+        left: 50%;
+        top: -18px;
+        transform: translateX(-50%);
+        border-left: 18px solid transparent;
+        border-right: 18px solid transparent;
+        border-bottom: 34px solid #f2b63c;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+      }
+
+      .wheel-dial {
+        position: absolute;
+        inset: 50%;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: white;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        border: 3px solid var(--purple);
+      }
+
+      .wheel-labels {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        color: var(--purple-dark);
+        font-size: 1.1rem;
+      }
+
+      .wheel-labels span {
+        position: absolute;
+        display: inline-flex;
+        width: 64px;
+        height: 64px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.18);
+      }
+
+      .lock-box {
+        display: grid;
+        place-items: center;
+        margin-top: 12px;
+      }
+
+      .lock {
+        position: relative;
+        width: 178px;
+        height: 178px;
+        border-radius: 30px;
+        background: linear-gradient(180deg, #dbd0ea, #bea7e5);
+        border: 6px solid #8f6dc3;
+        box-shadow: inset 0 0 0 12px rgba(255,255,255,0.18), 0 18px 22px rgba(84,63,120,0.15);
+        transform-origin: center;
+      }
+
+      .lock:before {
+        content: "";
+        position: absolute;
+        width: 84px;
+        height: 80px;
+        border: 8px solid #f1d58d;
+        border-bottom-width: 14px;
+        border-radius: 30px 30px 18px 18px;
+        top: 42px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(180deg, #ffe39c, #f6c04d);
+      }
+
+      .lock:after {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #f3e5b1;
+        top: 58px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .lock.open {
+        animation: openLock 1.6s ease forwards;
+      }
+
+      @keyframes openLock {
+        0% { transform: rotate(0deg) scale(1); }
+        25% { transform: rotate(-8deg); }
+        70% { transform: translateY(-10px) rotate(3deg) scale(1.04); }
+        100% { transform: rotate(16deg) translateY(-18px) scale(1.08); opacity: 0.93; }
+      }
+
+      .train-wrap {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .train {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .carriage {
+        width: 84px;
+        height: 52px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, #f7ebca, #e9ce7d);
+        border: 2px solid rgba(108,75,166,0.15);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        color: var(--purple-dark);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+      }
+
+      .carriage.wrong {
+        background: linear-gradient(180deg, #ffd9d9, #f7b1b1);
+        border-color: rgba(150,54,54,0.18);
+      }
+
+      .teacher-steps {
+        display: grid;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .step-box {
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(108,75,166,0.12);
+      }
+
+      .paper-surface {
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(108,75,166,0.12);
+        border-radius: 18px;
+        padding: 12px;
+      }
+
+      .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 14px;
+        overflow: hidden;
+        border-radius: 16px;
+      }
+
+      .summary-table th, .summary-table td {
+        padding: 12px;
+        border: 1px solid rgba(108,75,166,0.12);
+        background: rgba(255,255,255,0.14);
+        text-align: center;
+      }
+
+      .summary-table th {
+        background: rgba(108,75,166,0.13);
+        color: var(--purple-dark);
+      }
+
+      .teacher-eval {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .eval-btn {
+        border-radius: 16px;
+        background: linear-gradient(180deg, #edf4ff, #dce9ff);
+        border: 2px solid rgba(108,75,166,0.12);
+        padding: 12px 14px;
+        font-weight: 800;
+      }
+
+      .hidden { display: none !important; }
+
+      .feedback {
+        min-height: 44px;
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        display: none;
+        font-weight: 700;
+      }
+
+      .feedback.show {
+        display: block;
+      }
+
+      .feedback.success {
+        background: rgba(108, 187, 120, 0.18);
+        border: 2px solid rgba(84, 152, 90, 0.2);
+        color: #285932;
+      }
+
+      .feedback.error {
+        background: rgba(202, 94, 94, 0.14);
+        border: 2px solid rgba(187, 100, 100, 0.24);
+        color: #7a2d2d;
+      }
+
+      .feedback.info {
+        background: rgba(97, 122, 218, 0.14);
+        border: 2px solid rgba(86, 96, 180, 0.26);
+        color: #2d3d77;
+      }
+
+      .controls-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 18px;
+      }
+
+      .star-meter {
+        font-weight: 800;
+        font-size: 1.4rem;
+      }
+
+      .canvas-wrap {
+        margin-top: 14px;
+        display: grid;
+        gap: 10px;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        max-width: 440px;
+        height: 200px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(230,237,250,0.7));
+        border: 2px solid rgba(108,75,166,0.14);
+        touch-action: none;
+      }
+
+      .small-note {
+        color: #66527e;
+        font-size: 0.96rem;
+      }
+
+      .bottom-signature {
+        margin-top: 16px;
+        text-align: center;
+        font-size: 1rem;
+        color: var(--purple-dark);
+        font-weight: 700;
+      }
+
+      noscript .noscript-box {
+        display: block;
+      }
+
+      noscript .noscript-box {
+        background: #fef0f0;
+        color: #8a2b2b;
+        border: 2px solid #cf7878;
+        border-radius: 16px;
+        padding: 18px;
+        font-weight: 700;
+        line-height: 1.8;
+      }
+
+      @media (max-width: 820px) {
+        .setup-wrap {
+          grid-template-columns: 1fr;
+        }
+        .stage-map {
+          grid-template-columns: repeat(2, minmax(130px, 1fr));
+        }
+        .game-header {
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 520px) {
+        body { padding: 10px; }
+        .page { padding: 14px 12px 16px; }
+        .stage-map { grid-template-columns: 1fr; }
+        .controls-row { flex-direction: column; }
+        .topbar { flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <noscript>
+        <div class="noscript-box">
+          JavaScript غير مفعّل في المتصفح. يرجى تفعيل JavaScript لعرض اللعبة بشكل كامل.
+        </div>
+      </noscript>
+
+      <section id="homePage" class="page active">
+        <div class="topbar">
+          <div class="right-tools">
+            <button id="soundToggleHome" class="action-btn">الصوت: مغلق</button>
+          </div>
+          <div class="left-tools">
+            <button id="fullscreenBtn" class="action-btn">ملء الشاشة</button>
+          </div>
+        </div>
+
+        <div class="hero">
+          <div class="title-wrap">
+            <h1>رحلة الضرب</h1>
+            <div class="motto">نكتشف · نفكّر · نبدع</div>
+          </div>
+          <button id="startBtn" class="primary start-btn">ابدئي الرحلة</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-pill">نجوم: <span id="homeStars">0</span></div>
+          <div class="stat-pill">مراحل: <span id="homeProgress">0/6</span></div>
+        </div>
+
+        <div class="stage-map" id="stageMap"></div>
+      </section>
+
+      <section id="setupPage" class="page">
+        <div class="topbar">
+          <div class="right-tools">
+            <button id="soundToggleSetup" class="action-btn">الصوت: مغلق</button>
+          </div>
+          <div class="left-tools">
+            <button id="setupFullscreenBtn" class="action-btn">ملء الشاشة</button>
+          </div>
+        </div>
+
+        <div class="setup-wrap">
+          <div class="panel">
+            <h2>إعداد الحصة</h2>
+            <textarea id="studentsInput" placeholder="اكتبي أسماء الطالبات، سطرًا في سطر..."></textarea>
+          </div>
+
+          <div class="panel">
+            <div class="option-group">
+              <div>
+                <h3>جداول الضرب</h3>
+                <div id="tablesWrap" class="grid-checks"></div>
+              </div>
+
+              <div>
+                <h3>المؤقت</h3>
+                <select id="timerSelect">
+                  <option value="0">بدون مؤقت</option>
+                  <option value="30">٣٠ ثانية</option>
+                  <option value="60" selected>٦٠ ثانية</option>
+                  <option value="90">٩٠ ثانية</option>
+                  <option value="120">١٢٠ ثانية</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="saveSettingsBtn" class="secondary">حفظ الإعدادات</button>
+          <button id="startLessonBtn" class="primary">بدء الحصة</button>
+        </div>
+      </section>
+
+      <section id="gamePage" class="page">
+        <div class="game-header">
+          <div class="student-badge">الطالبة: <span id="studentName">—</span></div>
+
+          <div class="timer-controls">
+            <div class="timer-badge">الوقت: <span id="timerValue">60</span> ث</div>
+            <button id="timerToggleBtn">تشغيل المؤقت</button>
+            <button id="timerResetBtn">إعادة</button>
+          </div>
+
+          <div class="star-badge">النجوم: <span id="starsCount" class="star-meter">0</span> ⭐</div>
+        </div>
+
+        <div class="stage-panel">
+          <h2 id="stageTitle">مرحلة ١</h2>
+          <p id="stageSubTitle">عجلة الأسماء والتحديات</p>
+        </div>
+
+        <div id="challengeShell" class="challenge-shell"></div>
+        <div id="feedback" class="feedback"></div>
+
+        <div class="controls-row">
+          <button id="hintBtn" class="secondary">تلميح</button>
+          <button id="skipBtn" class="danger">تجاوز دون تقييم</button>
+          <button id="nextBtn" class="primary">التالي</button>
+        </div>
+      </section>
+
+      <section id="summaryPage" class="page">
+        <div class="panel">
+          <h2>حصاد الرحلة</h2>
+          <div id="summaryContainer"></div>
+          <div class="actions">
+            <button id="exportCsvBtn" class="secondary">تصدير CSV</button>
+            <button id="newLessonBtn" class="danger">حصة جديدة</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="bottom-signature">تصميم فاطمه الحسن - الابتدائية الرابعه</div>
+    </div>
+
+    <script>
+      const STAGES = [
+        "عجلة الأسماء والتحديات",
+        "محققات الضرب",
+        "افتحي القفل",
+        "اصطادي البطاقة",
+        "المعلّمة أخطأت!",
+        "قطار جدول الضرب"
+      ];
+
+      const defaultNames = [
+        "الطالبة ١",
+        "الطالبة ٢",
+        "الطالبة ٣",
+        "الطالبة ٤",
+        "الطالبة ٥",
+        "الطالبة ٦"
+      ];
+
+      const state = {
+        settings: {
+          names: [],
+          tables: [4],
+          timerSeconds: 60,
+          soundOn: false,
+          soundEnabled: false
+        },
+        studentsQueue: [],
+        currentStudent: "",
+        currentStageIndex: 0,
+        stageChallenges: [],
+        currentChallenge: null,
+        stars: 0,
+        timerValue: 60,
+        timerId: null,
+        timerRunning: false,
+        summary: {},
+        isLocked: false,
+        activeHint: "",
+        activeReason: "",
+        activeResult: "",
+        challengeSolved: false,
+        userHasInteracted: false
+      };
+
+      const elements = {};
+
+      document.addEventListener("DOMContentLoaded", function () {
+        cacheElements();
+        init();
+      });
+
+      function cacheElements() {
+        elements.homePage = document.getElementById("homePage");
+        elements.setupPage = document.getElementById("setupPage");
+        elements.gamePage = document.getElementById("gamePage");
+        elements.summaryPage = document.getElementById("summaryPage");
+
+        elements.stageMap = document.getElementById("stageMap");
+        elements.homeStars = document.getElementById("homeStars");
+        elements.homeProgress = document.getElementById("homeProgress");
+        elements.startBtn = document.getElementById("startBtn");
+        elements.soundToggleHome = document.getElementById("soundToggleHome");
+        elements.soundToggleSetup = document.getElementById("soundToggleSetup");
+        elements.fullscreenBtn = document.getElementById("fullscreenBtn");
+        elements.setupFullscreenBtn = document.getElementById("setupFullscreenBtn");
+
+        elements.studentsInput = document.getElementById("studentsInput");
+        elements.tablesWrap = document.getElementById("tablesWrap");
+        elements.timerSelect = document.getElementById("timerSelect");
+        elements.saveSettingsBtn = document.getElementById("saveSettingsBtn");
+        elements.startLessonBtn = document.getElementById("startLessonBtn");
+
+        elements.studentName = document.getElementById("studentName");
+        elements.stageTitle = document.getElementById("stageTitle");
+        elements.stageSubTitle = document.getElementById("stageSubTitle");
+        elements.challengeShell = document.getElementById("challengeShell");
+        elements.feedback = document.getElementById("feedback");
+        elements.timerValue = document.getElementById("timerValue");
+        elements.timerToggleBtn = document.getElementById("timerToggleBtn");
+        elements.timerResetBtn = document.getElementById("timerResetBtn");
+        elements.starsCount = document.getElementById("starsCount");
+        elements.hintBtn = document.getElementById("hintBtn");
+        elements.skipBtn = document.getElementById("skipBtn");
+        elements.nextBtn = document.getElementById("nextBtn");
+
+        elements.summaryContainer = document.getElementById("summaryContainer");
+        elements.exportCsvBtn = document.getElementById("exportCsvBtn");
+        elements.newLessonBtn = document.getElementById("newLessonBtn");
+      }
+
+      function init() {
+        renderTablesCheckboxes();
+        loadSettings();
+        renderHome();
+        bindEvents();
+      }
+
+      function bindEvents() {
+        elements.startBtn.addEventListener("click", () => showPage("setupPage"));
+        elements.saveSettingsBtn.addEventListener("click", saveSettingsFromForm);
+        elements.startLessonBtn.addEventListener("click", startLesson);
+        elements.soundToggleHome.addEventListener("click", () => toggleSound());
+        elements.soundToggleSetup.addEventListener("click", () => toggleSound());
+        elements.fullscreenBtn.addEventListener("click", toggleFullscreen);
+        elements.setupFullscreenBtn.addEventListener("click", toggleFullscreen);
+        elements.timerToggleBtn.addEventListener("click", toggleTimer);
+        elements.timerResetBtn.addEventListener("click", resetTimer);
+        elements.hintBtn.addEventListener("click", showHint);
+        elements.skipBtn.addEventListener("click", skipChallenge);
+        elements.nextBtn.addEventListener("click", advanceChallenge);
+        elements.exportCsvBtn.addEventListener("click", exportCsv);
+        elements.newLessonBtn.addEventListener("click", confirmNewLesson);
+      }
+
+      function renderTablesCheckboxes() {
+        const wrap = elements.tablesWrap;
+        wrap.innerHTML = "";
+        for (let i = 1; i <= 12; i++) {
+          const label = document.createElement("label");
+          label.className = "check-item";
+          label.innerHTML = `
+            <input type="checkbox" value="${i}" checked />
+            <span>${i}</span>
+          `;
+          wrap.appendChild(label);
+        }
+      }
+
+      function loadSettings() {
+        const saved = safeRead("journeyMultiplicationSettings");
+        const defaults = {
+          names: defaultNames,
+          tables: [4],
+          timerSeconds: 60,
+          soundOn: false
+        };
+
+        const finalSettings = saved ? { ...defaults, ...saved } : defaults;
+        state.settings = {
+          names: finalSettings.names && finalSettings.names.length ? finalSettings.names : defaultNames,
+          tables: Array.isArray(finalSettings.tables) && finalSettings.tables.length ? finalSettings.tables : [4],
+          timerSeconds: Number(finalSettings.timerSeconds) || 60,
+          soundOn: Boolean(finalSettings.soundOn)
+        };
+
+        state.settings.soundEnabled = state.settings.soundOn;
+        elements.studentsInput.value = state.settings.names.join("\n");
+        setDefaultTableChecks(state.settings.tables);
+        elements.timerSelect.value = String(state.settings.timerSeconds);
+        updateSoundButtons();
+
+        state.timerValue = state.settings.timerSeconds;
+        elements.timerValue.textContent = String(state.timerValue);
+
+        if (!state.settings.names.length) {
+          elements.studentsInput.value = defaultNames.join("\n");
+        }
+      }
+
+      function setDefaultTableChecks(selectedTables = [4]) {
+        const boxes = document.querySelectorAll("#tablesWrap input[type='checkbox']");
+        boxes.forEach((box) => {
+          const val = Number(box.value);
+          box.checked = selectedTables.includes(val);
+        });
+      }
+
+      function saveSettingsFromForm() {
+        const names = normalizeNames(elements.studentsInput.value);
+        if (!names.length) {
+          showFeedback("لا يوجد اسم مسجّل، سيتم استخدام أسماء افتراضية.", "info");
+          elements.studentsInput.value = defaultNames.join("\n");
+        }
+
+        const tables = Array.from(document.querySelectorAll("#tablesWrap input[type='checkbox']:checked")).map(el => Number(el.value));
+        const timerSeconds = Number(elements.timerSelect.value) || 60;
+
+        state.settings = {
+          names: names.length ? names : defaultNames,
+          tables: tables.length ? tables : [4],
+          timerSeconds,
+          soundOn: state.settings.soundOn
+        };
+
+        safeWrite("journeyMultiplicationSettings", state.settings);
+        updateSoundButtons();
+        renderHome();
+      }
+
+      function startLesson() {
+        saveSettingsFromForm();
+        const names = state.settings.names.length ? state.settings.names : defaultNames;
+        const tables = state.settings.tables.length ? state.settings.tables : [4];
+        state.studentsQueue = shuffle([...names]);
+
+        state.summary = createSummary(names);
+        state.stars = 0;
+        state.currentStageIndex = 0;
+        state.currentChallenge = null;
+        state.currentStudent = "";
+        state.challengeSolved = false;
+        state.isLocked = false;
+        state.activeHint = "";
+        state.activeReason = "";
+        state.activeResult = "";
+        state.timerValue = state.settings.timerSeconds;
+        elements.timerValue.textContent = String(state.timerValue);
+        stopTimer();
+
+        if (tables.length) {
+          state.settings.tables = tables;
+        }
+
+        showPage("gamePage");
+        prepareStage();
+      }
+
+      function prepareStage() {
+        const stage = STAGES[state.currentStageIndex];
+        state.stageChallenges = generateStageChallenges(state.currentStageIndex, state.settings.tables);
+        state.currentChallenge = state.stageChallenges[0];
+        state.currentStudent = nextStudent();
+        state.challengeSolved = false;
+        state.isLocked = false;
+        state.activeHint = "";
+        state.activeReason = "";
+        state.activeResult = "";
+        elements.stageTitle.textContent = `مرحلة ${state.currentStageIndex + 1}`;
+        elements.stageSubTitle.textContent = stage;
+        elements.studentName.textContent = state.currentStudent;
+        elements.starsCount.textContent = String(state.stars);
+        updateHomeStats();
+
+        if (state.settings.timerSeconds > 0) {
+          startTimer();
+        } else {
+          stopTimer();
+          elements.timerValue.textContent = "0";
+          elements.timerToggleBtn.textContent = "تشغيل المؤقت";
+        }
+
+        renderChallenge();
+      }
+
+      function nextStudent() {
+        if (!state.studentsQueue.length) {
+          state.studentsQueue = shuffle([...state.settings.names]);
+        }
+        return state.studentsQueue.shift();
+      }
+
+      function renderHome() {
+        const stageCards = STAGES.map((stage, index) => {
+          const completed = index < state.currentStageIndex;
+          const active = index === state.currentStageIndex;
+          const statusClass = completed ? "done" : active ? "active" : "locked";
+          return `
+            <div class="stage-card ${statusClass}">
+              <div class="stage-badge">${index + 1}</div>
+              <h3>${stage}</h3>
+              <div class="small-note">${completed ? "مكتملة" : active ? "الحالية" : "مغلقة"}</div>
+              <div class="star-small">${completed ? "★" : "☆"}</div>
+            </div>
+          `;
+        }).join("");
+
+        elements.stageMap.innerHTML = stageCards;
+        updateHomeStats();
+      }
+
+      function updateHomeStats() {
+        elements.homeStars.textContent = String(state.stars);
+        const progress = Math.min(state.currentStageIndex, STAGES.length);
+        elements.homeProgress.textContent = `${progress}/${STAGES.length}`;
+      }
+
+      function showPage(pageId) {
+        const pages = [elements.homePage, elements.setupPage, elements.gamePage, elements.summaryPage];
+        pages.forEach(page => page.classList.remove("active"));
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) targetPage.classList.add("active");
+      }
+
+      function toggleSound() {
+        state.settings.soundOn = !state.settings.soundOn;
+        state.settings.soundEnabled = state.settings.soundOn;
+        safeWrite("journeyMultiplicationSettings", state.settings);
+        updateSoundButtons();
+        playTone(440, 140, 0.04);
+      }
+
+      function updateSoundButtons() {
+        const text = state.settings.soundOn ? "الصوت: مفعل" : "الصوت: مغلق";
+        elements.soundToggleHome.textContent = text;
+        elements.soundToggleSetup.textContent = text;
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen?.().catch(() => {});
+        } else {
+          document.exitFullscreen?.().catch(() => {});
+        }
+      }
+
+      function startTimer() {
+        stopTimer();
+        if (state.settings.timerSeconds <= 0) return;
+
+        state.timerRunning = true;
+        elements.timerToggleBtn.textContent = "إيقاف المؤقت";
+        state.timerId = setInterval(() => {
+          if (!state.timerRunning) return;
+          state.timerValue -= 1;
+          elements.timerValue.textContent = String(Math.max(0, state.timerValue));
+          if (state.timerValue <= 0) {
+            stopTimer();
+            showFeedback("انتهى الوقت! لا تُخصم نجومًا، سنستمر إلى المرحلة التالية.", "info");
+            setTimeout(() => {
+              if (state.currentStageIndex < STAGES.length) {
+                advanceChallenge(false, true);
+              }
+            }, 1200);
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        state.timerRunning = false;
+        if (state.timerId) clearInterval(state.timerId);
+        elements.timerToggleBtn.textContent = "تشغيل المؤقت";
+      }
+
+      function toggleTimer() {
+        if (state.settings.timerSeconds <= 0) {
+          showFeedback("المؤقت غير مفعّل في الإعدادات.", "info");
+          return;
+        }
+        if (state.timerRunning) {
+          stopTimer();
+        } else {
+          state.timerRunning = true;
+          startTimer();
+        }
+      }
+
+      function resetTimer() {
+        state.timerValue = state.settings.timerSeconds;
+        elements.timerValue.textContent = String(state.timerValue);
+        stopTimer();
+      }
+
+      function showFeedback(message, type = "info") {
+        elements.feedback.textContent = message;
+        elements.feedback.className = `feedback show ${type}`;
+      }
+
+      function showHint() {
+        if (!state.currentChallenge) return;
+        const message = state.currentChallenge.hint || "فكّري في العملية نفسها ثم جرّبي مرة أخرى.";
+        showFeedback(message, "info");
+      }
+
+      function skipChallenge() {
+        if (!state.currentChallenge) return;
+        const student = state.currentStudent || "الطالبة";
+        state.summary[student].withoutRating += 1;
+        renderHome();
+        showFeedback("تم تجاوز السؤال دون تقييم. لا يُحتسب كإجابة خاطئة.", "info");
+        if (state.currentStageIndex >= STAGES.length) return;
+        setTimeout(() => advanceChallenge(true, false), 800);
+      }
+
+      function advanceChallenge(skipped = false, timeEnded = false) {
+        if (!state.currentChallenge) return;
+
+        const stage = state.currentStageIndex;
+        const challengeIndex = state.stageChallenges.findIndex(ch => ch.id === state.currentChallenge.id);
+
+        if (!skipped && !timeEnded && !state.challengeSolved && state.currentChallenge.type !== "teacher") {
+          // لا شيء، لا يتم التقدم بدون حلّ
+        }
+
+        // next challenge
+        const nextIndex = challengeIndex + 1;
+        if (nextIndex < state.stageChallenges.length) {
+          state.currentChallenge = state.stageChallenges[nextIndex];
+          state.currentStudent = nextStudent();
+          elements.studentName.textContent = state.currentStudent;
+          renderChallenge();
+          return;
+        }
+
+        // move to next stage
+        state.currentStageIndex += 1;
+        if (state.currentStageIndex >= STAGES.length) {
+          renderSummary();
+          return;
+        }
+
+        prepareStage();
+      }
+
+      function renderChallenge() {
+        const challenge = state.currentChallenge;
+        if (!challenge) return;
+
+        state.challengeSolved = false;
+        state.activeReason = "";
+        state.activeResult = "";
+        elements.hintBtn.disabled = false;
+
+        let html = `
+          <div class="challenge-card">
+            <h3 class="question-title">${challenge.title}</h3>
+            <div class="prompt-box">${challenge.prompt}</div>
+        `;
+
+        switch (challenge.type) {
+          case "wheel":
+            html += renderWheelChallenge(challenge);
+            break;
+          case "detective":
+            html += renderOptionsChallenge(challenge);
+            break;
+          case "lock":
+            html += renderLockChallenge(challenge);
+            break;
+          case "fish":
+            html += renderFishChallenge(challenge);
+            break;
+          case "teacher":
+            html += renderTeacherChallenge(challenge);
+            break;
+          case "train":
+            html += renderTrainChallenge(challenge);
+            break;
+        }
+
+        if (challenge.drawPrompt) {
+          html += renderDrawingPad(challenge.drawPrompt);
+        }
+
+        html += `
+          <div id="helperBox" class="helper-box hidden">${challenge.hint}</div>
+          <div class="teacher-eval hidden" id="evalGroup"></div>
+          <div class="controls-row" id="answerRow"></div>
+        </div>
+        `;
+
+        elements.challengeShell.innerHTML = html;
+        addChallengeBindings(challenge);
+
+        if (challenge.type === "wheel") {
+          setTimeout(() => spinWheel(challenge), 300);
+        }
+      }
+
+      function renderWheelChallenge(challenge) {
+        return `
+          <div class="wheel-wrap">
+            <div class="wheel" id="spinWheel">
+              <div class="wheel-labels">
+                <span style="transform: rotate(0deg) translate(0, -82px);">١</span>
+                <span style="transform: rotate(60deg) translate(0, -82px);">٢</span>
+                <span style="transform: rotate(120deg) translate(0, -82px);">٣</span>
+                <span style="transform: rotate(180deg) translate(0, -82px);">٤</span>
+                <span style="transform: rotate(240deg) translate(0, -82px);">٥</span>
+                <span style="transform: rotate(300deg) translate(0, -82px);">٦</span>
+              </div>
+              <div class="wheel-dial"></div>
+            </div>
+          </div>
+          <div class="small-note">اضغطي على "دوري العجلة" ثم أجيبي عن السؤال.</div>
+          <div class="answer-box">
+            <input type="text" id="answerInput" placeholder="اكتبي الناتج" inputmode="numeric" />
+            <button id="submitBtn" class="primary">تحقق</button>
+          </div>
+        `;
+      }
+
+      function renderOptionsChallenge(challenge) {
+        return `
+          <div class="options-grid">
+            ${challenge.options.map(option => `
+              <button class="choice-btn" data-option="${escapeHtml(option)}">${option}</button>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      function renderLockChallenge(challenge) {
+        return `
+          <div class="lock-box">
+            <div id="lockIcon" class="lock"></div>
+          </div>
+          <div class="answer-box">
+            <input type="text" id="answerInput" placeholder="أكتب العامل المفقود" inputmode="numeric" />
+            <button id="submitBtn" class="primary">فتح القفل</button>
+          </div>
+        `;
+      }
+
+      function renderFishChallenge(challenge) {
+        return `
+          <div class="fish-grid">
+            ${challenge.options.map(option => `
+              <button class="fish-card choice-btn" data-option="${escapeHtml(option)}">${option}</button>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      function renderTeacherChallenge(challenge) {
+        return `
+          <div class="teacher-steps">
+            ${challenge.steps.map(step => `<div class="step-box">${step}</div>`).join("")}
+          </div>
+          <div class="prompt-box">اختاري سبب الخطأ أولًا ثم الناتج الصحيح.</div>
+          <div class="options-grid">
+            ${challenge.reasonOptions.map(option => `
+              <button class="choice-btn reason-btn" data-reason="${escapeHtml(option)}">${option}</button>
+            `).join("")}
+          </div>
+          <div class="options-grid">
+            ${challenge.resultOptions.map(option => `
+              <button class="choice-btn result-btn" data-result="${escapeHtml(option)}">${option}</button>
+            `).join("")}
+          </div>
+          <div class="answer-box">
+            <button id="submitBtn" class="primary">تحقق</button>
+          </div>
+        `;
+      }
+
+      function renderTrainChallenge(challenge) {
+        return `
+          <div class="train-wrap">
+            <div class="train">
+              ${challenge.carriages.map((value, index) => `
+                <div class="carriage ${value.isWrong ? 'wrong' : ''}" data-value="${index}">${value.label}</div>
+              `).join("")}
+            </div>
+          </div>
+          <div class="small-note">اختاري العربة الخاطئة ثم صحّحيها.</div>
+          <div class="options-grid">
+            ${challenge.options.map(option => `
+              <button class="choice-btn" data-option="${escapeHtml(option)}">${option}</button>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      function renderDrawingPad(prompt) {
+        return `
+          <div class="canvas-wrap">
+            <div class="paper-surface">
+              <p>${prompt}</p>
+              <canvas id="drawCanvas" width="420" height="200"></canvas>
+              <div class="answer-box">
+                <button id="clearCanvasBtn" class="secondary">مسح اللوحة</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function addChallengeBindings(challenge) {
+        const helperBox = document.getElementById("helperBox");
+        if (helperBox) helperBox.classList.remove("hidden");
+
+        const answerRow = document.getElementById("answerRow");
+        if (answerRow) {
+          answerRow.innerHTML = "";
+        }
+
+        switch (challenge.type) {
+          case "wheel":
+            const wheelBtn = document.createElement("button");
+            wheelBtn.className = "secondary";
+            wheelBtn.textContent = "دوري العجلة";
+            wheelBtn.addEventListener("click", () => spinWheel(challenge));
+            answerRow.appendChild(wheelBtn);
+
+            const submit = document.getElementById("submitBtn");
+            submit.addEventListener("click", () => handleAnswerSubmit());
+            break;
+
+          case "detective":
+            document.querySelectorAll(".choice-btn").forEach(btn => {
+              btn.addEventListener("click", () => {
+                const chosen = btn.getAttribute("data-option");
+                state.activeResult = chosen;
+                checkAnswer(chosen, challenge);
+              });
+            });
+            break;
+
+          case "lock":
+            const submitLock = document.getElementById("submitBtn");
+            submitLock.addEventListener("click", () => handleAnswerSubmit());
+            break;
+
+          case "fish":
+            document.querySelectorAll(".choice-btn").forEach(btn => {
+              btn.addEventListener("click", () => {
+                const chosen = btn.getAttribute("data-option");
+                state.activeResult = chosen;
+                checkAnswer(chosen, challenge);
+              });
+            });
+            break;
+
+          case "teacher":
+            document.querySelectorAll(".reason-btn").forEach(btn => {
+              btn.addEventListener("click", () => {
+                state.activeReason = btn.getAttribute("data-reason");
+                btn.classList.add("correct");
+                document.querySelectorAll(".reason-btn").forEach(other => {
+                  if (other !== btn) other.classList.remove("correct");
+                });
+              });
+            });
+
+            document.querySelectorAll(".result-btn").forEach(btn => {
+              btn.addEventListener("click", () => {
+                state.activeResult = btn.getAttribute("data-result");
+                btn.classList.add("correct");
+                document.querySelectorAll(".result-btn").forEach(other => {
+                  if (other !== btn) other.classList.remove("correct");
+                });
+              });
+            });
+
+            const teacherSubmit = document.getElementById("submitBtn");
+            teacherSubmit.addEventListener("click", () => handleTeacherSubmit());
+            break;
+
+          case "train":
+            document.querySelectorAll(".choice-btn").forEach(btn => {
+              btn.addEventListener("click", () => {
+                const chosen = btn.getAttribute("data-option");
+                state.activeResult = chosen;
+                checkAnswer(chosen, challenge);
+              });
+            });
+            break;
+        }
+
+        if (challenge.drawPrompt) {
+          initDrawingCanvas();
+        }
+
+        if (challenge.type === "lock") {
+          const lock = document.getElementById("lockIcon");
+          if (lock) lock.classList.remove("open");
+        }
+      }
+
+      function spinWheel(challenge) {
+        const wheel = document.getElementById("spinWheel");
+        if (!wheel) return;
+
+        const randomSpins = 3 + Math.random() * 4;
+        const angle = (Math.random() * 360) + (360 * randomSpins);
+        wheel.style.transform = `rotate(${angle}deg)`;
+        const selectedNumber = (Math.floor((angle % 360) / 60) + 1);
+        const prompt = challenge.prompt.includes("النتيجة") ? "حسناً، الآن أجيب عن السؤال" : "كَمْ هي النتيجة؟";
+        challenge.selectedWheel = selectedNumber;
+        setTimeout(() => {
+          showFeedback(`اختيرت العجلة: ${selectedNumber}. ${prompt}`, "info");
+        }, 2400);
+      }
+
+      function handleAnswerSubmit() {
+        const challenge = state.currentChallenge;
+        if (!challenge) return;
+
+        const input = document.getElementById("answerInput");
+        const userValue = input ? input.value.trim() : "";
+        if (!userValue) {
+          showFeedback("اكتبي الإجابة أولًا.", "info");
+          return;
+        }
+
+        checkAnswer(userValue, challenge);
+      }
+
+      function handleTeacherSubmit() {
+        const challenge = state.currentChallenge;
+        if (!challenge) return;
+
+        if (!state.activeReason || !state.activeResult) {
+          showFeedback("اختاري سبب الخطأ أولًا ثم الناتج الصحيح.", "info");
+          return;
+        }
+
+        const reasonCorrect = normalizeText(state.activeReason) === normalizeText(challenge.correctReason);
+        const resultCorrect = normalizeText(state.activeResult) === normalizeText(String(challenge.answer));
+        if (reasonCorrect && resultCorrect) {
+          handleSuccess(challenge, true);
+        } else {
+          showFeedback("السبب أو الناتج غير صحيح، جرّبي مرة أخرى.", "error");
+        }
+      }
+
+      function checkAnswer(value, challenge) {
+        const normalizedValue = normalizeText(String(value));
+        const normalizedExpected = normalizeText(String(challenge.answer));
+        const target = challenge.answerText || challenge.answer;
+
+        if (normalizedValue === normalizedExpected || normalizeText(String(value)) === normalizeText(String(target))) {
+          handleSuccess(challenge);
+        } else {
+          showFeedback(challenge.retryMessage || "حاول مرة أخرى، هذا التلميح يساعدك.", "error");
+        }
+      }
+
+      function handleSuccess(challenge, isTeacher = false) {
+        if (state.challengeSolved) return;
+        state.challengeSolved = true;
+        state.currentChallenge = challenge;
+
+        const studentName = state.currentStudent || "الطالبة";
+        if (!state.summary[studentName]) {
+          state.summary[studentName] = createStudentRecord();
+        }
+
+        const current = state.summary[studentName];
+        current.stars = (current.stars || 0) + 1;
+        state.stars += 1;
+        elements.starsCount.textContent = String(state.stars);
+
+        if (challenge.type === "lock") {
+          const lock = document.getElementById("lockIcon");
+          if (lock) lock.classList.add("open");
+        }
+
+        showFeedback("إجابة صحيحة! نجمة لكِ ⭐", "success");
+        safeWrite("journeyMultiplicationSummary", state.summary);
+
+        const evalGroup = document.getElementById("evalGroup");
+        if (evalGroup) {
+          evalGroup.classList.remove("hidden");
+          evalGroup.innerHTML = `
+            <button class="eval-btn" data-eval="independent">أجابت وشرحت</button>
+            <button class="eval-btn" data-eval="help">بمساعدة</button>
+            <button class="eval-btn" data-eval="training">تحتاج إلى تدريب</button>
+            <button class="eval-btn" data-eval="explain">نجمة الشرح</button>
+          `;
+
+          evalGroup.querySelectorAll(".eval-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              const value = btn.getAttribute("data-eval");
+              if (value === "independent") {
+                current.independent += 1;
+                showFeedback("رائـع! الإجابة صحيحة وشرحتها.", "success");
+              } else if (value === "help") {
+                current.withHelp += 1;
+                showFeedback("حسناً، سأعطيكِ فرصة أخرى بمساعدة.", "info");
+              } else if (value === "training") {
+                current.needsTraining += 1;
+                showFeedback("سنراجع المعلومة معًا.", "info");
+              } else if (value === "explain") {
+                current.explanations += 1;
+                current.stars += 1;
+                state.stars += 1;
+                elements.starsCount.textContent = String(state.stars);
+                showFeedback("نجمة إضافية لشرح طريقة الحل ⭐", "success");
+              }
+              safeWrite("journeyMultiplicationSummary", state.summary);
+              renderHome();
+            });
+          });
+        }
+
+        elements.nextBtn.textContent = "التالي";
+        elements.nextBtn.disabled = false;
+      }
+
+      function exportCsv() {
+        const rows = [
+          ["الطالبة", "مستقلة", "بمساعدة", "تحتاج إلى تدريب", "دون تقييم", "مرات الشرح", "النجوم"]
+        ];
+
+        Object.entries(state.summary || {}).forEach(([name, data]) => {
+          rows.push([
+            name,
+            data.independent || 0,
+            data.withHelp || 0,
+            data.needsTraining || 0,
+            data.withoutRating || 0,
+            data.explanations || 0,
+            data.stars || 0
+          ]);
+        });
+
+        const csv = "\uFEFF" + rows.map(row => row.map(escapeCsv).join(",")).join("\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "حصاد_الرحلة.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function escapeCsv(value) {
+        const val = String(value ?? "");
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+
+      function confirmNewLesson() {
+        const confirmed = window.confirm("هل تريد بدء حصة جديدة؟ سيتم مسح البيانات الحالية.");
+        if (confirmed) {
+          resetAllProgress();
+          showPage("setupPage");
+        }
+      }
+
+      function resetAllProgress() {
+        state.stars = 0;
+        state.currentStageIndex = 0;
+        state.summary = {};
+        state.studentsQueue = [];
+        state.currentStudent = "";
+        stopTimer();
+        state.timerValue = state.settings.timerSeconds || 60;
+        elements.timerValue.textContent = String(state.timerValue);
+        elements.starsCount.textContent = "0";
+        renderHome();
+      }
+
+      function createSummary(names) {
+        const data = {};
+        names.forEach(name => {
+          data[name] = createStudentRecord();
+        });
+        return data;
+      }
+
+      function createStudentRecord() {
+        return {
+          independent: 0,
+          withHelp: 0,
+          needsTraining: 0,
+          withoutRating: 0,
+          explanations: 0,
+          stars: 0
+        };
+      }
+
+      function generateStageChallenges(stageIndex, tables) {
+        const arr = [];
+        for (let i = 0; i < 3; i++) {
+          switch (stageIndex) {
+            case 0:
+              arr.push(buildWheelChallenge(tables, i));
+              break;
+            case 1:
+              arr.push(buildDetectiveChallenge(tables, i));
+              break;
+            case 2:
+              arr.push(buildLockChallenge(tables, i));
+              break;
+            case 3:
+              arr.push(buildFishChallenge(tables, i));
+              break;
+            case 4:
+              arr.push(buildTeacherChallenge(tables, i));
+              break;
+            case 5:
+              arr.push(buildTrainChallenge(tables, i));
+              break;
+            default:
+              arr.push(buildWheelChallenge(tables, i));
+          }
+        }
+        return arr;
+      }
+
+      function buildWheelChallenge(tables, index) {
+        const table = tables[Math.floor(Math.random() * tables.length)] || 4;
+        const factorA = randomInt(2, 9);
+        const factorB = randomInt(2, 9);
+        const answer = table * factorA;
+        return {
+          id: `wheel-${index}-${Date.now()}`,
+          type: "wheel",
+          title: "دوري العجلة",
+          prompt: `تدور العجلة، ثم أجيبي: ${table} × ${factorA} = ؟`,
+          answer: String(answer),
+          hint: `استخدمي جدول ${table} أو كرري جمع العدد ${table} ${factorA} مرات.`,
+          retryMessage: "حاول مرة أخرى، استخدام جدول الضرب يسهّل المهمة."
+        };
+      }
+
+      function buildDetectiveChallenge(tables, index) {
+        const table = tables[Math.floor(Math.random() * tables.length)] || 4;
+        const factorA = randomInt(2, 9);
+        const factorB = randomInt(2, 9);
+        const correctAnswer = table * factorA;
+        const wrongAnswer = correctAnswer + randomInt(1, 5);
+
+        const options = [
+          `${table} × ${factorA} = ${correctAnswer}`,
+          `${table} × ${factorA} = ${wrongAnswer}`,
+          `${table} + ${factorA} = ${table + factorA}`
+        ].sort(() => Math.random() - 0.5);
+
+        return {
+          id: `detective-${index}-${Date.now()}`,
+          type: "detective",
+          title: "محقّقات الضرب",
+          prompt: `رأيت تعبيرًا مكتوبًا: ${table} × ${factorA} = ${wrongAnswer}. أيّ التصحيح صحيح؟`,
+          answer: `${table} × ${factorA} = ${correctAnswer}`,
+          options,
+          hint: `الضرب ليس جمعًا، بل تكرار العدد نفسه عدد المرات.`,
+          retryMessage: "راجعِ التعويض في الضرب وابحثي عن النتيجة الصحيحة."
+        };
+      }
+
+      function buildLockChallenge(tables, index) {
+        const table = tables[Math.floor(Math.random() * tables.length)] || 4;
+        const factorA = randomInt(2, 9);
+        const correct = factorA * table;
+        const missing = factorA;
+        return {
+          id: `lock-${index}-${Date.now()}`,
+          type: "lock",
+          title: "افتحي القفل",
+          prompt: `${table} × ؟ = ${correct}`,
+          answer: String(missing),
+          hint: `افكري: ما العدد الذي إذا ضربته في ${table} يحصل ${correct}؟`,
+          retryMessage: "جربي قسمة الناتج على ${table}."
+        };
+      }
+
+      function buildFishChallenge(tables, index) {
+        const table = tables[Math.floor(Math.random() * tables.length)] || 4;
+        const groups = randomInt(2, 4);
+        const itemsEach = randomInt(2, 8);
+        const total = groups * itemsEach;
+
+        const options = [total, total + randomInt(1, 4), total - randomInt(1, 3), itemsEach + groups].filter((value, pos, arr) => arr.indexOf(value) === pos).sort(() => Math.random() - 0.5);
+
+        return {
+          id: `fish-${index}-${Date.now()}`,
+          type: "fish",
+          title: "اصطادي البطاقة",
+          prompt: `في كل علبة ${itemsEach} أقلام، وعدد العلب ${groups}. كم عدد الأقلام إذا جمعت كل العلب؟`,
+          answer: String(total),
+          options,
+          hint: `احسبي عدد المجموعات، ثم كرّري العدد في كل مجموعة.`,
+          retryMessage: "عددي عدد الأقلام في كل مجموعة ثم ضعيها في المجموعات."
+        };
+      }
+
+      function buildTeacherChallenge(tables, index) {
+        const table = tables[Math.floor(Math.random() * tables.length)] || 4;
+        const factorA = randomInt(2, 8);
+        const factorB = randomInt(2, 8);
+        const correct = table * factorA;
+        const wrongReason = `جمعنا ${table} و${factorA} بدل الضرب`;
+        const reasonOptions = [
+          "جمعنا العاملين بدل ضربهما",
+          "استخدمنا مجموعة زائدة",
+          "حسّبنا العدد الخطأ في الصف"
+        ];
+
+        const resultOptions = [
+          String(correct),
+          String(correct + randomInt(1, 4)),
+          String(correct - randomInt(1, 3)),
+          String(factorA + table)
+        ].filter((value, pos, arr) => arr.indexOf(value) === pos).sort(() => Math.random() - 0.5);
+
+        return {
+          id: `teacher-${index}-${Date.now()}`,
+          type: "teacher",
+          title: "المعلّمة أخطأت!",
+          prompt: `قالت المعلمة: ${table} × ${factorA} = ${table + factorA}. ما سبب الخطأ؟`,
+          steps: [
+            `${table} × ${factorA} يُعنى: تكرار العدد ${table} ${factorA} مرة.`,
+            `لكن المعلمة جمعت العددين بدل ضربهما.`,
+            `الحل الصحيح هو ${correct}.`
+          ],
+          reasonOptions,
+          resultOptions,
+          answer: String(correct),
+          correctReason: "جمعنا العاملين بدل ضربهما",
+          hint: `تذكّري: الضرب هو تكرار المجموعة نفسها، لا جمع العددين.`,
+          retryMessage: "راجعِ سبب الخطأ ثم اختاري الناتج الصحيح."
+        };
+      }
+
+      function buildTrainChallenge(tables, index) {
+        const table = tables[Math.floor(Math.random() * tables.length)] || 4;
+        const values = [];
+        for (let i = 1; i <= 5; i++) {
+          values.push({ label: i * table, isWrong: false });
+        }
+        const wrongIndex = randomInt(0, 4);
+        values[wrongIndex].label = values[wrongIndex].label + randomInt(1, 4);
+        values[wrongIndex].isWrong = true;
+
+        const correctOption = `${table} × ${wrongIndex + 1} = ${((wrongIndex + 1) * table)}`;
+        const options = [
+          correctOption,
+          `${table} × ${randomInt(1, 5)} = ${randomInt(1, 5) * table}`,
+          `${table} × ${randomInt(1, 5)} = ${randomInt(1, 5) * table}`,
+          `${table} × ${randomInt(1, 5)} = ${randomInt(1, 5) * table}`
+        ].filter((value, pos, arr) => arr.indexOf(value) === pos).sort(() => Math.random() - 0.5);
+
+        return {
+          id: `train-${index}-${Date.now()}`,
+          type: "train",
+          title: "قطار جدول الضرب",
+          prompt: `أيّ عربة في القطار غير صحيحة؟`,
+          carriages: values,
+          answer: correctOption,
+          options,
+          hint: `ابحثي عن العربة التي لا تتبع نفس النمط.`,
+          retryMessage: "توقّفي عند العربة التي لا تناسب جدول الضرب."
+        };
+      }
+
+      function initDrawingCanvas() {
+        const canvas = document.getElementById("drawCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        let isDrawing = false;
+        const start = (event) => {
+          isDrawing = true;
+          const pos = getPointerPosition(event, canvas);
+          ctx.beginPath();
+          ctx.moveTo(pos.x, pos.y);
+        };
+        const move = (event) => {
+          if (!isDrawing) return;
+          const pos = getPointerPosition(event, canvas);
+          ctx.lineWidth = 5;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          ctx.strokeStyle = "#6c4ba6";
+          ctx.lineTo(pos.x, pos.y);
+          ctx.stroke();
+        };
+        const end = () => { isDrawing = false; };
+
+        canvas.addEventListener("pointerdown", start);
+        canvas.addEventListener("pointermove", move);
+        canvas.addEventListener("pointerup", end);
+        canvas.addEventListener("pointerleave", end);
+        canvas.addEventListener("pointercancel", end);
+
+        const clearBtn = document.getElementById("clearCanvasBtn");
+        clearBtn?.addEventListener("click", () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+      }
+
+      function getPointerPosition(event, canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return {
+          x: (event.clientX - rect.left) * scaleX,
+          y: (event.clientY - rect.top) * scaleY
+        };
+      }
+
+      function renderSummary() {
+        showPage("summaryPage");
+        const rows = Object.entries(state.summary || {}).map(([student, data]) => {
+          return `
+            <tr>
+              <td>${student}</td>
+              <td>${data.independent || 0}</td>
+              <td>${data.withHelp || 0}</td>
+              <td>${data.needsTraining || 0}</td>
+              <td>${data.withoutRating || 0}</td>
+              <td>${data.explanations || 0}</td>
+              <td>${data.stars || 0}</td>
+            </tr>
+          `;
+        }).join("");
+
+        elements.summaryContainer.innerHTML = `
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>الطالبة</th>
+                <th>مستقلة</th>
+                <th>بمساعدة</th>
+                <th>تحتاج إلى تدريب</th>
+                <th>دون تقييم</th>
+                <th>مرات الشرح</th>
+                <th>النجوم</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows || `<tr><td colspan="7">لا توجد بيانات حتى الآن.</td></tr>`}
+            </tbody>
+          </table>
+        `;
+      }
+
+      function normalizeText(value) {
+        return String(value || "")
+          .replace(/[\u0660-\u0669]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+          .replace(/[\u06F0-\u06F9]/g, d => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
+          .replace(/ /g, "")
+          .toLowerCase();
+      }
+
+      function safeWrite(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (error) {
+          // التخزين المحلي غير متاح، تستمر اللعبة مع الذاكرة فقط
+        }
+      }
+
+      function safeRead(key) {
+        try {
+          const item = localStorage.getItem(key);
+          return item ? JSON.parse(item) : null;
+        } catch (error) {
+          return null;
+        }
+      }
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function shuffle(arr) {
+        const clone = [...arr];
+        for (let i = clone.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [clone[i], clone[j]] = [clone[j], clone[i]];
+        }
+        return clone;
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
+
+      function playTone(frequency, duration, volume = 0.04) {
+        if (!state.settings.soundOn) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+
+        try {
+          const context = new AudioCtx();
+          const oscillator = context.createOscillator();
+          const gainNode = context.createGain();
+          oscillator.type = "sine";
+          oscillator.frequency.value = frequency;
+          gainNode.gain.value = volume;
+          oscillator.connect(gainNode);
+          gainNode.connect(context.destination);
+          oscillator.start();
+          oscillator.stop(context.currentTime + duration / 1000);
+        } catch (error) {}
+      }
+    </script>
+  </body>
+</html>
